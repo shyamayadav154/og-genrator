@@ -1,7 +1,13 @@
-FROM node:16-alpine
+FROM node:16-alpine as builder
 WORKDIR /app
 COPY package.json .
-RUN npm install --omit=dev
-COPY . .
+RUN npm ci
+RUN npm run build
+
+
+
+FROM node:16-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
 EXPOSE 4000
-CMD ["npm", "start"]
+CMD ["node", "server.bundle.js"]
