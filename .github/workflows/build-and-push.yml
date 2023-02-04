@@ -36,56 +36,6 @@ jobs:
           cache-from: type=registry,ref=${{secrets.DOCKERHUB_USERNAME}}/mevfinal:buildcache
           cache-to: type=registry,ref=${{secrets.DOCKERHUB_USERNAME}}/mevfinal:buildcache,mode=max
 
-  Update-argocd:
-    runs-on: ubuntu-latest
-    needs: Build-and-Push
-    name: Update argocd-mevvit Repo
-
-    steps:
-      - name: Checkout argocd-mevvit repo
-        uses: actions/checkout@v3
-        with:
-          repository: shyamayadav154/argocd-mevvit
-          token: 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
-          path: ./argocd-mevvit
-          ref: main
-          persist-credentials: true
-
-      - name: Docker meta
-        uses: docker/metadata-action@v4
-        id: meta2
-        with:
-          images: ${{secrets.DOCKERHUB_USERNAME}}/mevfinal
-          tags: |
-            type=sha
-
-      - name: Run Actions for Dev Branch argo cd repo update
-        if: ${{ github.ref == 'refs/heads/dev' }}
-        run: |
-          echo "Running actions for dev branch..."
-          cd ./argocd-mevvit
-          cd dev
-          sed -i "s|image: .*|image: ${{steps.meta2.outputs.tags}}|g" deployment.yml
-          git status
-          git add ..
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git commit -am "${{steps.meta2.outputs.tags}} auto updated by github actions"
-          git push
-
-      - name: Run Actions for Main Branch argo cd repo update
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          echo "Running actions for main branch..."
-          cd ./argocd-mevvit
-          cd frontend
-          sed -i "s|image: .*|image: ${{steps.meta2.outputs.tags}}|g" deployment.yml
-          git status
-          git add ..
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git commit -am "${{steps.meta2.outputs.tags}} auto updated by github actions"
-          git push
 
 # sed -i 's/${{secrets.DOCKERHUB_USERNAME}}\/mevfinal/${{secrets.DOCKERHUB_USERNAME}}\/mevfinal:${{ steps.meta.outputs.tags }}/' deployment.yml
 # update deployment.yml for another github repo for argocd
