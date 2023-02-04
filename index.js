@@ -10,12 +10,19 @@ app.get("/og-image", async (req, res) => {
   }
 
   try {
-    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const browser = await puppeteer.launch({
+      // executablePath: "/usr/bin/google-chrome",
+      args: ["--no-sandbox"],
+      headless: true,
+    });
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
     await page.goto(link, { waitUntil: "networkidle2" });
-    const screenshot = await page.screenshot({ type: "jpeg",clip: { x: 240, y: 20, width: 900, height: 600 } });
+    const screenshot = await page.screenshot({
+      type: "jpeg",
+      clip: { x: 240, y: 20, width: 900, height: 600 },
+    });
     await browser.close();
 
     res.set("Content-Type", "image/jpeg");
