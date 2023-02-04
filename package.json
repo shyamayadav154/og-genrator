@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "webpack --config webpack.config.js --mode production"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,6 @@
   "dependencies": {
     "express": "^4.18.2",
     "puppeteer": "^19.6.3",
-    "puppeteer-core": "^19.6.3",
     "satori": "^0.2.1"
   }
 }
