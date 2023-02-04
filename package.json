@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "webpack --mode production"
+    "build": "webpack webpack.config.js",
+    "acp": "git add . && git commit -m \"auto commit\" && git push "
+  
   },
   "repository": {
     "type": "git",
