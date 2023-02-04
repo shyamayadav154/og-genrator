@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:18-alpine as builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -6,7 +6,7 @@ RUN npm run build
 
 
 
-FROM node:16-alpine
+FROM node:18-alpine
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 EXPOSE 4000
