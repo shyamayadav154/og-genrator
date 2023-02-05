@@ -23,9 +23,7 @@ RUN apk update && apk upgrade && \
     freetype-dev \
     harfbuzz \
     ca-certificates \
-    ttf-freefont \
-    nodejs && \
-    apk del freetype-dev
+    ttf-freefont 
 
 
 WORKDIR /app
