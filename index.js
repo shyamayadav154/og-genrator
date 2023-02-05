@@ -11,6 +11,7 @@ app.get("/og-image", async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
+      executablePath: "/usr/bin/chromium-browser",
       args: ["--no-sandbox"],
       headless: true,
     });
