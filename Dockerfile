@@ -11,6 +11,7 @@ FROM node:16-alpine
 
 WORKDIR /app
 COPY --from=builder /app/dist .
-COPY --from=builder /usr/bin /usr/bin
+COPY package.json package-lock.json ./
+RUN npm i puppeteer
 EXPOSE 4000
 CMD ["node", "server.bundle.js"]
