@@ -1,7 +1,15 @@
-FROM node:lts-alpine
-
+FROM node:16-alpine as builder
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
+
+
+FROM node:16-alpine
+WORKDIR /app
 RUN apk update && apk add --no-cache nmap && \
     echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
     echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
@@ -13,9 +21,7 @@ RUN apk update && apk add --no-cache nmap && \
     ttf-freefont \
     nss
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-COPY . /app
-RUN npm install
-RUN npm run build
+COPY --from=builder /app/dist ./
+
 EXPOSE 4000
-CMD ["node", "./dist/server.bundle.js"]
+CMD ["node", "server.bundle.js"]
