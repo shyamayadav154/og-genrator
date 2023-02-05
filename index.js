@@ -18,18 +18,22 @@ app.get("/og-image", async (req, res) => {
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
-    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.goto(link, { waitUntil: "networkidle2", });
+    //if 404 retry
+    if (page.url().includes("404")) {
+      await page.goto(link, { waitUntil: "networkidle2", });
+    }
     const screenshot = await page.screenshot({
       type: "jpeg",
       clip: { x: 240, y: 20, width: 900, height: 600 },
     });
-    await browser.close();
-
+    
     res.set("Content-Type", "image/jpeg");
     res.send(screenshot);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
+  await browser.close();
 });
 
 app.listen(4000, () => {
