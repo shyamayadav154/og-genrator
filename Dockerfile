@@ -24,9 +24,10 @@ RUN apk update && apk upgrade && \
     harfbuzz \
     ca-certificates \
     ttf-freefont \
-    nodejs
+    nodejs \
+    apk del freetype-dev
 
-    
+
 WORKDIR /app
 COPY --from=builder /app/dist .
 # COPY --from=builder /usr /usr
