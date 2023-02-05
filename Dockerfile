@@ -11,4 +11,4 @@ RUN npm prune --production
 # WORKDIR /app
 # COPY --from=builder /app/dist .
 EXPOSE 4000
-CMD ["node", "server.bundle.js"]
+CMD ["node", "./dist/server.bundle.js"]
