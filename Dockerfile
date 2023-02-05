@@ -23,7 +23,14 @@ RUN apk update && apk upgrade && \
     freetype-dev \
     harfbuzz \
     ca-certificates \
-    ttf-freefont 
+    ttf-freefont && \
+    apk del \
+    *-dev \
+    *-doc \
+    *-static \
+    *-perl \
+    *-python \
+    *-libs 
 
 
 WORKDIR /app
