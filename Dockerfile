@@ -1,14 +1,21 @@
-FROM node:16-alpine as builder
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-RUN npm prune --production
+FROM node:lts-alpine
 
-# FROM node:16-alpine
-# RUN apk add puppeteer
-# WORKDIR /app
-# COPY --from=builder /app/dist .
+WORKDIR /app
+
+RUN apk update && apk add --no-cache nmap && \
+    echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+    echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+    apk update && \
+    apk add --no-cache \
+    chromium \
+    harfbuzz \
+    "freetype>2.8" \
+    ttf-freefont \
+    nss
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+COPY . /app
+RUN npm install
+RUN npm run build
 EXPOSE 4000
 CMD ["node", "./dist/server.bundle.js"]
