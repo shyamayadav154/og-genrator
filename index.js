@@ -8,6 +8,9 @@ app.get("/og-image", async (req, res) => {
   if (!link) {
     return res.status(400).send({ error: "Link parameter is required" });
   }
+  
+
+  
 
   try {
     const browser = await puppeteer.launch({
@@ -27,9 +30,14 @@ app.get("/og-image", async (req, res) => {
       type: "jpeg",
       clip: { x: 240, y: 20, width: 900, height: 600 },
     });
-    
-    res.set("Content-Type", "image/jpeg");
-    res.send(screenshot);
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "image/jpeg");
+      res.setHeader(
+        "Cache-Control",
+        `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`
+      );
+
+    res.end(screenshot);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
