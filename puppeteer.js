@@ -23,7 +23,7 @@ exports.generateImage = async function (req, res) {
 
 
    const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/chromium-browser",
+    // executablePath: "/usr/bin/chromium-browser",
     args: ["--no-sandbox"],
     headless: true,
 
@@ -31,10 +31,10 @@ exports.generateImage = async function (req, res) {
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768 });
-  await page.goto(link, { waitUntil: "networkidle2" });
+  await page.goto(link, { waitUntil: "domcontentloaded" });
   // retry if 404
   if (page.url().includes("404")) {
-    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.goto(link, { waitUntil: "domcontentloaded" });
   }
   const image = await page.screenshot({
     type: "jpeg",
